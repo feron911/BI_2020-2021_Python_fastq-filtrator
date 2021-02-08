@@ -1,4 +1,4 @@
-import os, sys, re
+import os, sys
 
 args = sys.argv
 
@@ -11,10 +11,18 @@ if 'C:\\' in args[-1]:
 else:
     fqfile = os.getcwd() + '\\' + sys.argv[-1]
 
-if '--min-length' in args:
+if '--help' in args:
+    print("This script filter input fastQ file by minimal length \n "
+          "(option --min_length [number]) and GC content of read \n"
+          "(option --gc_bounds [lower] [upper])")
+
+if '--min_length' in args:
     minlen = True
-    if args[args.index('--min-length') + 1].isdigit():
-        min_read_len = int(args[args.index('--min-length') + 1])
+    if args[args.index('--min_length') + 1].isdigit():
+        min_read_len = int(args[args.index('--min_length') + 1])
+    else:
+        print("Please check --min-length argument. Probably you forget to add threshold.")
+        exit()
 
 if '--output_base_name' in args:
     outname = args[args.index('--output_base_name') + 1] + '.fastq'
@@ -34,11 +42,20 @@ if '--keep_filtered' in args:
 
 if '--gc_bounds' in args:
     gcfilt = True
-    gccount = [int(args[args.index('--gc_bounds') + 1])]
+    if args[args.index('--gc_bounds') + 1].isdigit():
+        gccount = [int(args[args.index('--gc_bounds') + 1])]
+    else:
+        print("Please check --min-length argument. Probably you forget to add threshold.")
+        exit()
     if args[args.index('--gc_bounds') + 2].isdigit():
         gccount += [int(args[args.index('--gc_bounds') + 2])]
 
 def write_outfq(name, read):
+    if os.path.isfile(os.getcwd() + '\\' + name):
+        Ans = input("Do you want to replace " + os.getcwd() + '\\' + name)
+        if Ans in ['N', "No"]:
+            print("Please, restart script with another option")
+            exit()
     with open(os.getcwd() + '\\' + name, "a") as fqout:
         fqout.write(read)
 
