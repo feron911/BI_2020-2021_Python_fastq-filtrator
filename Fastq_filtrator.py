@@ -15,6 +15,7 @@ if '--help' in args:
     print("This script filter input fastQ file by minimal length \n "
           "(option --min_length [number]) and GC content of read \n"
           "(option --gc_bounds [lower] [upper])")
+    exit()
 
 if '--min_length' in args:
     minlen = True
